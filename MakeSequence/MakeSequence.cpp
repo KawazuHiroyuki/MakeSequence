@@ -3,9 +3,32 @@
 
 #include <iostream>
 
+#include <array>
+#include <deque>
+#include <forward_list>
+#include <list>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+
+#include "MakeSequence.h"
+
 int main()
 {
     std::cout << "Hello World!\n";
+
+    auto sequence = utility::makeSequence<int, std::vector>(-22, 20, [](int x) { return x+2; });
+
+    for (auto element : sequence) {
+        std::cout << element << ", ";
+    }
+    std::cout << std::endl;
+
+
 }
 
 // プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー
