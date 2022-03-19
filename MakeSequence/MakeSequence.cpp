@@ -40,6 +40,20 @@ void print(const std::string& brief, const Containter<Key, Type, std::less<Key>,
     std::cout << std::endl;
 }
 
+template <
+    typename Key,
+    typename Type,
+    template<class, class, class, class, class> class Containter
+>
+void print(const std::string& brief, const Containter<Key, Type, std::hash<Key>, std::equal_to<Key>, std::allocator<std::pair<const Key, Type>>>& sequence)
+{
+    std::cout << brief << ": ";
+    for (auto element : sequence) {
+        std::cout << "[" << element.first << ", " << element.second << "]";
+    }
+    std::cout << std::endl;
+}
+
 template <typename T, std::size_t N>
 class Array : public std::array<T, N>
 {
@@ -148,33 +162,6 @@ int main()
     }
 #endif
 
-    // tempalte <class Key, class Compare = less<Key>, class Allocator = allocator<Key>>
-    {
-        // std::map
-        auto sequence = utility::makeSequence<std::string, int, std::map>(20, {"Key0", 0}, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
-        print("std::map 0", sequence);
-
-        //auto sequence1 = utility::makeSequence<std::string, int>(20, { "Key1", 1 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
-        //print("std::map 1", sequence1);
-    }
-
-    {
-        // std::multimap
-        auto sequence = utility::makeSequence<std::string, int, std::multimap>(20, { "Key0", 0 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
-        print("std::multimap 0", sequence);
-
-        auto sequence1 = utility::makeSequence<std::string, int, std::multimap>(20, { "Key0", 0 }, [](std::pair<std::string, int> x) { return x; });
-        print("std::multimap 1", sequence1);
-    }
-
-    {
-        // std::unordered_map
-    }
-
-    {
-        // std::unordered_multimap
-    }
-
     // tempalte <class Key, class T, class Compare = less<Key>, class Allocator = allocator<pair<const Key, T>>
     {
         // std::set
@@ -200,15 +187,52 @@ int main()
         print("std::multiset 2", sequence2);
     }
 
+    // tempalte <class Key, class Hash = std::hash<Key>, class Pred = std::equal_to<Key>, class Allocator = std::allocator<Key>>
     {
         // std::unordered_set
         auto sequence = utility::makeSequence<double, std::unordered_set>(20, -22, [](double x) { return x + 2.1; });
         print("std::unordered_set 0", sequence);
+
+        auto sequence1 = utility::makeIndexSequence<std::unordered_set>(20, -22);
+        print("std::unordered_set 1", sequence1);
     }
 
     {
         // std::unordered_multiset
         auto sequence = utility::makeSequence<double, std::unordered_multiset>(20, -22, [](double x) { return x; });
         print("std::unordered_multiset 0", sequence);
+    }
+
+
+    // tempalte <class Key, class Compare = less<Key>, class Allocator = allocator<Key>>
+    {
+        // std::map
+        auto sequence = utility::makeSequence<std::string, int, std::map>(20, { "Key0", 0 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
+        print("std::map 0", sequence);
+
+        //auto sequence1 = utility::makeSequence<std::string, int>(20, { "Key1", 1 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
+        //print("std::map 1", sequence1);
+    }
+
+    {
+        // std::multimap
+        auto sequence = utility::makeSequence<std::string, int, std::multimap>(20, { "Key0", 0 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
+        print("std::multimap 0", sequence);
+
+        auto sequence1 = utility::makeSequence<std::string, int, std::multimap>(20, { "Key0", 0 }, [](std::pair<std::string, int> x) { return x; });
+        print("std::multimap 1", sequence1);
+    }
+
+    // tempalte <class Key, class T, class Hash = std::hash<Key>, class Pred = std::equal_to<Key>, class Allocator = std::allocator<std::pair<const Key, class T>>>
+    {
+        // std::unordered_map
+        auto sequence = utility::makeSequence<std::string, int, std::unordered_map>(20, { "Key0", 0 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
+        print("std::unordered_map 0", sequence);
+    }
+
+    {
+        // std::unordered_multimap
+        auto sequence = utility::makeSequence<std::string, int, std::unordered_multimap>(20, { "Key0", 0 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
+        print("std::unordered_multimap 0", sequence);
     }
 }
