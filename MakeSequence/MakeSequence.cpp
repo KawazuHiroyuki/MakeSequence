@@ -56,7 +56,7 @@ int main()
         auto sequence1 = utility::makeSequence<double, 12, std::array>(74.99, [](double x) { return x + 2.551; });
         print(sequence1);
 
-        auto sequence2 = utility::makeIndexSequence<12>();
+        auto sequence2 = utility::makeIndexSequence<12>(2);
         print(sequence2);
 
         auto sequence3 = utility::makeSequence<double, 12, Array>(74.99, [](double x) { return x + 69; });

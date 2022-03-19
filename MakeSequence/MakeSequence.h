@@ -9,6 +9,7 @@
 #include <valarray>
 #include <queue>
 #include <set>
+#include <numeric>
 
 namespace utility
 {
@@ -42,7 +43,8 @@ template <
 >
 inline auto makeIndexSequence(std::size_t start = std::size_t())
 {
-    auto sequence = makeSequence<std::size_t, Size, Containter, std::function<std::size_t(std::size_t)>>(start, [](std::size_t x) { return ++x; });
+    Containter<std::size_t, Size> sequence;
+    std::iota(sequence.begin(), sequence.end(), start);
     return sequence;
 }
 
@@ -74,7 +76,8 @@ template <
 >
 inline auto makeIndexSequence(std::size_t size, std::size_t start = std::size_t())
 {
-    auto sequence = makeSequence<std::size_t, Containter, std::function<std::size_t(std::size_t)>>(size, start, [](std::size_t x) { return ++x; });
+    Containter<std::size_t, std::allocator<std::size_t>> sequence(size);
+    std::iota(sequence.begin(), sequence.end(), start);
     return sequence;
 }
 
