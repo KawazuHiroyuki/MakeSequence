@@ -129,7 +129,7 @@ template <
     template<class, class, class> class Containter /*= std::set*/,
     typename Increment = typename Incrementer<Key>
 >
-inline auto makeSequence(std::size_t size, Key start = Type(), Increment increment = DefaultIncrementer<Key>())
+inline auto makeSequence(std::size_t size, Key start = Key(), Increment increment = DefaultIncrementer<Key>())
 {
     Containter<Key, std::less<Key>, std::allocator<Key>> sequence;
     Key element = start;
@@ -139,6 +139,12 @@ inline auto makeSequence(std::size_t size, Key start = Type(), Increment increme
     }
     return sequence;
 }
+
+
+
+
+
+
 
 template <
     template<class, class, class> class Containter /*= std::set*/
@@ -156,7 +162,7 @@ inline auto makeIndexSequence(std::size_t size, std::size_t start = std::size_t(
 template <
     typename Key,
     typename Type,
-    template<class, class, class, class> class Containter = std::map,
+    template<class, class, class, class> class Containter /*= std::map*/,
     typename Increment = typename Incrementer<Type>
 >
 inline auto makeSequence(std::size_t size, std::pair<Key, Type> start, Increment increment)
@@ -170,15 +176,30 @@ inline auto makeSequence(std::size_t size, std::pair<Key, Type> start, Increment
     return sequence;
 }
 
-
 // tempalte <class Key, class T, class Hash = std::hash<Key>, class Pred = std::equal_to<Key>, class Allocator = std::allocator<std::pair<const Key, class T>>>
 //   std::unordered_map
 //   std::unordered_multimap
 
+#if 1
 // tempalte <class Key, class Hash = std::hash<Key>, class Pred = std::equal_to<Key>, class Allocator = std::allocator<Key>>
 //   std::unordered_set
 //   std::unordered_multiset
-
+template <
+    typename Key,
+    template<class, class, class, class> class Containter /*= std::set*/,
+    typename Increment = typename Incrementer<Key>
+>
+inline auto makeSequence(std::size_t size, Key start = Key(), Increment increment = DefaultIncrementer<Key>())
+{
+    Containter<Key, std::hash<Key>, std::equal_to<Key>, std::allocator<Key>> sequence;
+    Key element = start;
+    for (auto index : makeIndexSequence(size)) {
+        sequence.insert(element);
+        element = increment(element);
+    }
+    return sequence;
+}
+#endif
 
 #if 0
 // template <class T>

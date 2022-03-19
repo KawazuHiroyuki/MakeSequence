@@ -154,8 +154,8 @@ int main()
         auto sequence = utility::makeSequence<std::string, int, std::map>(20, {"Key0", 0}, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
         print("std::map 0", sequence);
 
-        auto sequence1 = utility::makeSequence<std::string, int>(20, { "Key1", 1 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
-        print("std::map 1", sequence1);
+        //auto sequence1 = utility::makeSequence<std::string, int>(20, { "Key1", 1 }, [](std::pair<std::string, int> x) { return std::make_pair(std::string("Key" + std::to_string(x.second + 1)), x.second + 1); });
+        //print("std::map 1", sequence1);
     }
 
     {
@@ -202,9 +202,13 @@ int main()
 
     {
         // std::unordered_set
+        auto sequence = utility::makeSequence<double, std::unordered_set>(20, -22, [](double x) { return x + 2.1; });
+        print("std::unordered_set 0", sequence);
     }
 
     {
         // std::unordered_multiset
+        auto sequence = utility::makeSequence<double, std::unordered_multiset>(20, -22, [](double x) { return x; });
+        print("std::unordered_multiset 0", sequence);
     }
 }
