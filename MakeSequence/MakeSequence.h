@@ -10,6 +10,7 @@
 #include <queue>
 #include <set>
 #include <numeric>
+#include <map>
 
 namespace utility
 {
@@ -100,12 +101,23 @@ inline auto makeIndexSequence(std::size_t size, std::size_t start = std::size_t(
 #if 0
 template <
     typename Type,
-    template<class, template<class, class> class> class Containter = std::queue<Type>,
+    template<class, template<class, class> class> class ContainterAdapter/* = std::queue<Type>*/,
     typename Increment = std::function<Type(Type)>
 >
-inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = [](Type x) { return ++x; })
+inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = DefaultIncrementer<Type>())
 {
+    ContainterAdapter<Type, std::queue<Type>> sequence;
+    Type element = start;
+    for (auto index : makeIndexSequence(size)) {
+        sequence.push(element);
+        element = increment(element);
+    }
+    return sequence;
 }
+
+// template <class T, class Container = std::vector<T>, class Compare = std::less<typename Container::value_type>>
+//   std::priority_queue
+
 #endif
 
 // tempalte <class Key, class Compare = less<Key>, class Allocator = allocator<Key>>
@@ -113,14 +125,14 @@ inline auto makeSequence(std::size_t size, Type start = Type(), Increment increm
 //   std::multiset
 #if 1
 template <
-    typename Type,
+    typename Key,
     template<class, class, class> class Containter /*= std::set*/,
-    typename Increment = typename Incrementer<Type>
+    typename Increment = typename Incrementer<Key>
 >
-inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = DefaultIncrementer<Type>())
+inline auto makeSequence(std::size_t size, Key start = Type(), Increment increment = DefaultIncrementer<Key>())
 {
-    Containter<Type, std::less<Type>, std::allocator<Type>> sequence;
-    Type element = start;
+    Containter<Key, std::less<Key>, std::allocator<Key>> sequence;
+    Key element = start;
     for (auto index : makeIndexSequence(size)) {
         sequence.insert(element);
         element = increment(element);
@@ -141,6 +153,31 @@ inline auto makeIndexSequence(std::size_t size, std::size_t start = std::size_t(
 // tempalte <class Key, class T, class Compare = less<Key>, class Allocator = allocator<pair<const Key, T>>
 //   std::map
 //   std::multimap
+template <
+    typename Key,
+    typename Type,
+    template<class, class, class, class> class Containter = std::map,
+    typename Increment = typename Incrementer<Type>
+>
+inline auto makeSequence(std::size_t size, std::pair<Key, Type> start, Increment increment)
+{
+    Containter<Key, Type, std::less<Key>, std::allocator<std::pair<const Key, Type>>> sequence;
+    std::pair<Key, Type> element = start;
+    for (auto index : makeIndexSequence(size)) {
+        sequence.insert(element);
+        element = increment(element);
+    }
+    return sequence;
+}
+
+
+// tempalte <class Key, class T, class Hash = std::hash<Key>, class Pred = std::equal_to<Key>, class Allocator = std::allocator<std::pair<const Key, class T>>>
+//   std::unordered_map
+//   std::unordered_multimap
+
+// tempalte <class Key, class Hash = std::hash<Key>, class Pred = std::equal_to<Key>, class Allocator = std::allocator<Key>>
+//   std::unordered_set
+//   std::unordered_multiset
 
 
 #if 0
