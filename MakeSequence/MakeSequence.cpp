@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <string>
 
 #include <array>
 #include <deque>
@@ -18,8 +19,9 @@
 #include "MakeSequence.h"
 
 template <typename Container>
-void print(const Container& sequence)
+void print(const std::string& brief, const Container& sequence)
 {
+    std::cout << brief << ": ";
     for (auto element : sequence) {
         std::cout << element << ", ";
     }
@@ -51,68 +53,71 @@ int main()
     {
         // array
         auto sequence = utility::makeSequence<double, 10>(-9.99, [](double x) { return x + 2.551; });
-        print(sequence);
+        print("std::array", sequence);
 
         auto sequence1 = utility::makeSequence<double, 12, std::array>(74.99, [](double x) { return x + 2.551; });
-        print(sequence1);
+        print("std::array", sequence1);
 
         auto sequence2 = utility::makeIndexSequence<12>(2);
-        print(sequence2);
+        print("std::array", sequence2);
 
         auto sequence3 = utility::makeSequence<double, 12, Array>(74.99, [](double x) { return x + 69; });
-        print(sequence3);
+        print("std::array", sequence3);
 
         auto sequence4 = utility::makeIndexSequence<12, Array>();
-        print(sequence4);
+        print("std::array", sequence4);
+
+        auto sequence5 = utility::makeSequence<double, 12, Array>(5);
+        print("std::array", sequence5);
     }
 
     // template <class T, class Allocator = allocator<T>>
     {
         // deque
         auto sequence = utility::makeSequence<double, std::deque>(10, -2.6, [](double x) { return x + 2.551; });
-        print(sequence);
+        print("std::deque", sequence);
     }
 
     {
         // forward_list
         auto sequence = utility::makeSequence<double, std::forward_list>(10, -34.6, [](double x) { return x + 3.9; });
-        print(sequence);
+        print("std::forward_list", sequence);
     }
 
     {
         // list
         auto sequence = utility::makeSequence<double, std::list>(10, -23, [](double x) { return x - 3.6; });
-        print(sequence);
+        print("std::list", sequence);
     }
 
     {
         // vector
         auto sequence = utility::makeSequence<double, std::vector>(20, -22, [](double x) { return x+2.1; });
-        print(sequence);
+        print("std::vector", sequence);
 
         auto sequence1 = utility::makeSequence<double, std::vector>(20);
-        print(sequence1);
+        print("std::vector", sequence1);
 
         auto sequence2 = utility::makeSequence<double, std::vector>(20, 300);
-        print(sequence2);
+        print("std::vector", sequence2);
 
         auto sequence3 = utility::makeSequence<double>(20, 300);
-        print(sequence3);
+        print("std::vector", sequence3);
 
         auto sequence4 = utility::makeIndexSequence(10);
-        print(sequence4);
+        print("std::vector", sequence4);
 
         auto sequence5 = utility::makeIndexSequence(10, 1);
-        print(sequence5);
+        print("std::vector", sequence5);
 
         auto sequence6 = utility::makeIndexSequence<std::list>(10);
-        print(sequence6);
+        print("std::vector", sequence6);
 
         auto sequence7 = utility::makeSequence<double>(20, 300, function1);
-        print(sequence7);
+        print("std::vector", sequence7);
 
         auto sequence8 = utility::makeSequence<double>(20, 300, Functor());
-        print(sequence8);
+        print("std::vector", sequence8);
     }
 
     // template <class T, class Container = deque<T>>
@@ -140,6 +145,8 @@ int main()
     // tempalte <class Key, class T, class Compare = less<Key>, class Allocator = allocator<pair<const Key, T>>
     {
         // set
+        auto sequence = utility::makeSequence<double, std::set>(20, -22, [](double x) { return x + 2.1; });
+        print("std::set", sequence);
     }
 
     {

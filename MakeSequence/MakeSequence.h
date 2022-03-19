@@ -16,15 +16,28 @@ namespace utility
 
 // Increment = Type (Type);
 
+template <typename Type>
+using Incrementer = std::function<Type(Type)>;
+
+template <typename Type>
+struct DefaultIncrementer
+{
+    Type operator()(Type x) const
+    {
+        return ++x;
+    }
+};
+
+
 // tempalte <class T, std::size_t N>
 //   std::array
 template <
     typename Type,
     std::size_t Size,
     template<class, std::size_t> class Containter = std::array,
-    typename Increment = std::function<Type(Type)>
+    typename Increment = typename Incrementer<Type>
 >
-inline auto makeSequence(Type start = Type(), Increment increment = [](Type x) { return ++x; })
+inline auto makeSequence(Type start = Type(), Increment increment = DefaultIncrementer<Type>())
 {
     Containter<Type, Size> sequence;
     Type element = start;
@@ -56,9 +69,9 @@ inline auto makeIndexSequence(std::size_t start = std::size_t())
 template <
     typename Type,
     template<class, class> class Containter = std::vector,
-    typename Increment = std::function<Type(Type)>
+    typename Increment = typename Incrementer<Type>
 >
-inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = [](Type x) { return ++x; })
+inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = DefaultIncrementer<Type>())
 {
     Containter<Type, std::allocator<Type>> sequence(size);
     Type element = start;
@@ -98,31 +111,29 @@ inline auto makeSequence(std::size_t size, Type start = Type(), Increment increm
 // tempalte <class Key, class Compare = less<Key>, class Allocator = allocator<Key>>
 //   std::set
 //   std::multiset
-#if 0
+#if 1
 template <
     typename Type,
-    template<class, class, class> class Containter = std::set,
-    typename Increment = std::function<Type(Type)>
+    template<class, class, class> class Containter /*= std::set*/,
+    typename Increment = typename Incrementer<Type>
 >
-inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = [](Type x) { return ++x; })
+inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = DefaultIncrementer<Type>())
 {
-    Containter<Type, less<Type>, std::allocator<Type>> sequence(size);
+    Containter<Type, std::less<Type>, std::allocator<Type>> sequence;
     Type element = start;
-    std::generate(sequence.begin(), sequence.end(),
-        [&increment, &element]() {
-            auto temp = element;
-            element = increment(element);
-            return temp;
-        });
+    for (auto index : makeIndexSequence(size)) {
+        sequence.insert(element);
+        element = increment(element);
+    }
     return sequence;
 }
 
 template <
-    template<class, class, class> class Containter = std::set
+    template<class, class, class> class Containter /*= std::set*/
 >
 inline auto makeIndexSequence(std::size_t size, std::size_t start = std::size_t())
 {
-    auto sequence = makeSequence<std::size_t, Containter, std::function<std::size_t(std::size_t)>>(size, start, [](std::size_t x) { return ++x; });
+    auto sequence = makeSequence<std::size_t, Containter>(size, start, DefaultIncrementer<std::size_t>());
     return sequence;
 }
 #endif
