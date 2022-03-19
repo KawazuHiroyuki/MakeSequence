@@ -17,18 +17,134 @@
 
 #include "MakeSequence.h"
 
-int main()
+template <typename Container>
+void print(const Container& sequence)
 {
-    std::cout << "Hello World!\n";
-
-    auto sequence = utility::makeSequence<int, std::vector>(-22, 20, [](int x) { return x+2; });
-
     for (auto element : sequence) {
         std::cout << element << ", ";
     }
     std::cout << std::endl;
+}
+
+template <typename T, std::size_t N>
+class Array : public std::array<T, N>
+{
+
+};
 
 
+int main()
+{
+    std::cout << "Hello World!\n";
+
+    std::function<double(double)> function1 = [](double x) { return x + 1.02020; };
+    struct Functor 
+    {
+        double operator()(double x)
+        {
+            return x + 369.8;
+        }
+    };
+
+
+    // tempalte <class T, std::size_t N>
+    {
+        // array
+        auto sequence = utility::makeSequence<double, 10>(-9.99, [](double x) { return x + 2.551; });
+        print(sequence);
+
+        auto sequence1 = utility::makeSequence<double, 12, std::array>(74.99, [](double x) { return x + 2.551; });
+        print(sequence1);
+
+        auto sequence2 = utility::makeIndexSequence<12>();
+        print(sequence2);
+
+        auto sequence3 = utility::makeSequence<double, 12, Array>(74.99, [](double x) { return x + 69; });
+        print(sequence3);
+
+        auto sequence4 = utility::makeIndexSequence<12, Array>();
+        print(sequence4);
+    }
+
+    // template <class T, class Allocator = allocator<T>>
+    {
+        // deque
+        auto sequence = utility::makeSequence<double, std::deque>(10, -2.6, [](double x) { return x + 2.551; });
+        print(sequence);
+    }
+
+    {
+        // forward_list
+        auto sequence = utility::makeSequence<double, std::forward_list>(10, -34.6, [](double x) { return x + 3.9; });
+        print(sequence);
+    }
+
+    {
+        // list
+        auto sequence = utility::makeSequence<double, std::list>(10, -23, [](double x) { return x - 3.6; });
+        print(sequence);
+    }
+
+    {
+        // vector
+        auto sequence = utility::makeSequence<double, std::vector>(20, -22, [](double x) { return x+2.1; });
+        print(sequence);
+
+        auto sequence1 = utility::makeSequence<double, std::vector>(20);
+        print(sequence1);
+
+        auto sequence2 = utility::makeSequence<double, std::vector>(20, 300);
+        print(sequence2);
+
+        auto sequence3 = utility::makeSequence<double>(20, 300);
+        print(sequence3);
+
+        auto sequence4 = utility::makeIndexSequence(10);
+        print(sequence4);
+
+        auto sequence5 = utility::makeIndexSequence(10, 1);
+        print(sequence5);
+
+        auto sequence6 = utility::makeIndexSequence<std::list>(10);
+        print(sequence6);
+
+        auto sequence7 = utility::makeSequence<double>(20, 300, function1);
+        print(sequence7);
+
+        auto sequence8 = utility::makeSequence<double>(20, 300, Functor());
+        print(sequence8);
+    }
+
+    // template <class T, class Container = deque<T>>
+    {
+        // queue
+        //auto sequence = utility::makeSequence<double, std::queue>(-23, 10, [](double x) { return x - 3.6; });
+        //print(sequence);
+    }
+
+    {
+        // stack
+        //auto sequence = utility::makeSequence<double, std::stack>(-1, 10, [](double x) { return x - 6.9; });
+        //print(sequence);
+    }
+
+    // tempalte <class Key, class Compare = less<Key>, class Allocator = allocator<Key>>
+    {
+        // map
+    }
+
+    {
+        // unordered_map
+    }
+
+    // tempalte <class Key, class T, class Compare = less<Key>, class Allocator = allocator<pair<const Key, T>>
+    {
+        // set
+    }
+
+    {
+        // unordered_set
+    }
 }
 
 // プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー
