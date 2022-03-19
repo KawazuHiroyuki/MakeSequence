@@ -147,7 +147,7 @@ int main()
     // template <class T, class Container = deque<T>>
     {
         // std::queue
-        auto sequence = utility::makeSequence<double, std::queue>(-23, 10, [](double x) { return x - 3.6; });
+        auto sequence = utility::makeSequence<double, std::queue, std::deque, utility::Incrementer<double>>(-23, 10, [](double x) { return x - 3.6; });
         //print(sequence);
     }
 

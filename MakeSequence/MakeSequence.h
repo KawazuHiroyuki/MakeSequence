@@ -11,6 +11,7 @@
 #include <set>
 #include <numeric>
 #include <map>
+#include <deque>
 
 namespace utility
 {
@@ -101,12 +102,13 @@ inline auto makeIndexSequence(std::size_t size, std::size_t start = std::size_t(
 #if 0
 template <
     typename Type,
-    template<class, template<class, class> class> class ContainterAdapter/* = std::queue<Type>*/,
-    typename Increment = std::function<Type(Type)>
+    template<class, template<class, class> class> class ContainterAdapter/* = std::queue<Type, std::deque<Type>>*/,
+    template<class, class> class Container /*= std::deque*/,
+    typename Increment = typename Incrementer<Type>
 >
 inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = DefaultIncrementer<Type>())
 {
-    ContainterAdapter<Type, std::queue<Type>> sequence;
+    ContainterAdapter<Type, Container> sequence;
     Type element = start;
     for (auto index : makeIndexSequence(size)) {
         sequence.push(element);
@@ -225,7 +227,11 @@ inline auto makeSequence(std::size_t size, std::pair<Key, Type> start, Increment
 // template <class T>
 //   std::valarray
 //   std::
-template <typename Type, template<class> class Containter = std::valarray, typename Increment = std::function<Type(Type)>>
+template <
+    typename Type,
+    template<class> class Containter = std::valarray,
+    typename Increment = typename Incrementer<Type>
+>
 inline auto makeSequence(std::size_t size, Type start = Type(), Increment increment = [](Type x) { return ++x; })
 {
     Containter<Type> sequence(size);
@@ -239,7 +245,9 @@ inline auto makeSequence(std::size_t size, Type start = Type(), Increment increm
     return sequence;
 }
 
-template <template<class> class Containter = std::valarray>
+template <
+    template<class> class Containter = std::valarray
+>
 inline auto makeIndexSequence(std::size_t size, std::size_t start = std::size_t())
 {
     auto sequence = makeSequence<std::size_t, Containter, std::function<std::size_t(std::size_t)>>(size, start, [](std::size_t x) { return ++x; });
